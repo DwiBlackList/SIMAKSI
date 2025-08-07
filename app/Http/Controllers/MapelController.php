@@ -8,11 +8,20 @@ use Illuminate\Http\Request;
 class MapelController extends Controller
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $mapels = Mapel::all();
+        return view('mapel' , compact('mapels'));
     }
 
     /**
@@ -28,7 +37,14 @@ class MapelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_mapel' => 'required|string|max:255',
+            'semester' => 'required|string|max:255',
+        ]);
+
+        Mapel::create($request->all());
+
+        return redirect()->route('mapel.index')->with('success', 'Mata Pelajaran created successfully.');
     }
 
     /**
@@ -52,7 +68,14 @@ class MapelController extends Controller
      */
     public function update(Request $request, Mapel $mapel)
     {
-        //
+        $request->validate([
+            'nama_mapel' => 'required|string|max:255',
+            'semester' => 'required|string|max:255',
+        ]);
+
+        $mapel->update($request->all());
+
+        return redirect()->route('mapel.index')->with('success', 'Mata Pelajaran updated successfully.');
     }
 
     /**
@@ -60,6 +83,8 @@ class MapelController extends Controller
      */
     public function destroy(Mapel $mapel)
     {
-        //
+        Mapel::findOrFail($mapel->id)->delete();
+        return redirect()->route('mapel.index')->with('success', 'Mata Pelajaran deleted successfully.');
+
     }
 }
