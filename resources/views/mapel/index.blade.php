@@ -4,6 +4,20 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 <h1>{{ __('Mata Pelajaran') }}</h1>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                     Tambah Mapel
@@ -27,11 +41,12 @@
                                     <div class="mb-3">
                                         <label for="nama_mapel" class="form-label">Nama Mapel</label>
                                         <input type="text" class="form-control" id="nama_mapel" name="nama_mapel"
-                                            required>
+                                            value="{{ old('nama_mapel') }}" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="semester" class="form-label">Semester</label>
-                                        <input type="text" class="form-control" id="semester" name="semester" required>
+                                        <input type="text" class="form-control" id="semester" name="semester"
+                                            value="{{ old('semester') }}" required>
                                     </div>
                             </div>
 

@@ -21,7 +21,7 @@ class MapelController extends Controller
     public function index()
     {
         $mapels = Mapel::all();
-        return view('mapel' , compact('mapels'));
+        return view('mapel.index' , compact('mapels'));
     }
 
     /**
