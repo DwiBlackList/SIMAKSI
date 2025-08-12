@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\MapelController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('login');
 });
 
 Auth::routes();
@@ -12,3 +13,5 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('/mapel' , MapelController::class);
+Route::resource('/kehadiran' , KehadiranController::class);
+Route::resource('/siswa' , KehadiranController::class);

@@ -3,16 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kehadiran;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class KehadiranController extends Controller
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $kehadirans = Kehadiran::all();
+        $siswas = User::where('role', '=', 'siswa')->get();
+        return view('kehadiran.index', compact('siswas', 'kehadirans'));
     }
 
     /**
@@ -28,15 +39,39 @@ class KehadiranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'semester' => 'required|string|max:255',
+            'hadir' => 'required|integer',
+            'absen' => 'required|integer',
+            'ijin' => 'required|integer',
+            'sakit' => 'required|integer',
+        ]);
+
+        // Cek apakah user_id + semester sudah ada
+        $exists = Kehadiran::where('user_id', $request->user_id)
+            ->where('semester', $request->semester)
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()
+                ->withErrors(['semester' => 'Data untuk semester ini sudah ada untuk user tersebut.'])
+                ->withInput();
+        }
+
+        Kehadiran::create($request->all());
+
+        return redirect()->route('kehadiran.show', $request->user_id)->with('success', 'Data Kehadiran created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Kehadiran $kehadiran)
+    public function show($id)
     {
-        //
+        $siswa = User::where('id', '=', $id)->get();
+        $kehadirans = Kehadiran::where('user_id', '=', $id)->get();
+        return view('kehadiran.show', compact('siswa', 'kehadirans'));
     }
 
     /**
@@ -52,7 +87,31 @@ class KehadiranController extends Controller
      */
     public function update(Request $request, Kehadiran $kehadiran)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'semester' => 'required|string|max:255',
+            'hadir' => 'required|integer',
+            'absen' => 'required|integer',
+            'ijin' => 'required|integer',
+            'sakit' => 'required|integer',
+        ]);
+
+        // Kalau semester berubah, cek duplikasi
+        if ($request->semester != $kehadiran->semester) {
+            $exists = Kehadiran::where('user_id', $request->user_id)
+                ->where('semester', $request->semester)
+                ->exists();
+
+            if ($exists) {
+                return redirect()->back()
+                    ->withErrors(['semester' => 'Data untuk semester ini sudah ada untuk user tersebut.'])
+                    ->withInput();
+            }
+        }
+
+        $kehadiran->update($request->all());
+
+        return redirect()->route('kehadiran.show', $request->user_id)->with('success', 'Data Kehadiran updated successfully.');
     }
 
     /**
@@ -60,6 +119,7 @@ class KehadiranController extends Controller
      */
     public function destroy(Kehadiran $kehadiran)
     {
-        //
+        Kehadiran::findOrFail($kehadiran->id)->delete();
+        return redirect()->route('kehadiran.show', $kehadiran->user_id)->with('success', 'Data Kehadiran deleted successfully.');
     }
 }
