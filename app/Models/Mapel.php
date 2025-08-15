@@ -12,4 +12,9 @@ class Mapel extends Model
         'nama_mapel',
         'semester',
     ];
+
+    public function joinedclass()
+    {
+        return $this->hasMany(JoinedClass::class);
+    }
 }

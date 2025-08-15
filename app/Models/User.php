@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Kehadiran::class);
     }
+
+    public function joinedclass()
+    {
+        return $this->hasMany(JoinedClass::class);
+    }
 }
