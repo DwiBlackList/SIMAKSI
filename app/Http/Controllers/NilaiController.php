@@ -3,16 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Nilai;
+use App\Models\JoinedClass;
+use App\Models\Mapel;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class NilaiController extends Controller
 {
     /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $joinedClasses = JoinedClass::with(['user', 'mapel'])->get();
+        $mapels = Mapel::all();
+        $users = User::all();
+        $nilais = Nilai::all();
+        return view('nilai.index', compact('joinedClasses', 'mapels', 'users', 'nilais'));
     }
 
     /**
@@ -28,8 +43,28 @@ class NilaiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'mapel_id' => 'required|exists:mapels,id',
+            'user_id' => 'required|integer',
+            'nilai' => 'required|numeric|min:0|max:100',
+        ]);
+
+        // cek apakah sudah ada nilai untuk user_id + mapel_id
+        $exists = Nilai::where('mapel_id', $request->mapel_id)
+            ->where('user_id', $request->user_id)
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()
+                ->withErrors(['mapel_id' => 'User ini sudah memiliki nilai untuk mata pelajaran tersebut.'])
+                ->withInput();
+        }
+
+        Nilai::create($request->all());
+
+        return redirect()->route('nilai.index')->with('success', 'Nilai berhasil ditambahkan.');
     }
+
 
     /**
      * Display the specified resource.
@@ -52,7 +87,15 @@ class NilaiController extends Controller
      */
     public function update(Request $request, Nilai $nilai)
     {
-        //
+        $request->validate([
+            'mapel_id' => 'required|exists:mapels,id',
+            'user_id' => 'required|integer',
+            'nilai' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $nilai->update($request->all());
+
+        return redirect()->route('nilai.index')->with('success', 'Nilai berhasil diupdate.');
     }
 
     /**
@@ -60,6 +103,8 @@ class NilaiController extends Controller
      */
     public function destroy(Nilai $nilai)
     {
-        //
+        $nilai->delete();
+
+        return redirect()->route('nilai.index')->with('success', 'Nilai berhasil dihapus.');
     }
 }

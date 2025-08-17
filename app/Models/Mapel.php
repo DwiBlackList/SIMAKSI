@@ -17,4 +17,9 @@ class Mapel extends Model
     {
         return $this->hasMany(JoinedClass::class);
     }
+
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class);
+    }
 }

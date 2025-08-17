@@ -64,10 +64,13 @@
                                 <a class="nav-link" href="{{ route('mapel.index') }}">{{ __('Mapel') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('kehadiran.index') }}">{{ __('Kehadiran') }}</a>
+                                <a class="nav-link" href="{{ route('settingkelas.index') }}">{{ __('Setting Kelas') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('settingkelas.index') }}">{{ __('Setting Kelas') }}</a>
+                                <a class="nav-link" href="{{ route('nilai.index') }}">{{ __('Penilaian Mapel') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('kehadiran.index') }}">{{ __('Kehadiran') }}</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
