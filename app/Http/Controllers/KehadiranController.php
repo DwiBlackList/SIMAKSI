@@ -14,6 +14,13 @@ class KehadiranController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'gurubp/bk') {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
     }
 
     /**

@@ -15,6 +15,13 @@ class JoinedClassController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role !== 'admin') {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
     }
 
     /**
@@ -25,7 +32,7 @@ class JoinedClassController extends Controller
         $joinedClasses = JoinedClass::with(['user', 'mapel'])->get();
         $mapels = Mapel::all();
         $users = User::all();
-        return view('joinedclass.index', compact('joinedClasses', 'mapels' , 'users'));
+        return view('joinedclass.index', compact('joinedClasses', 'mapels', 'users'));
     }
 
     /**
