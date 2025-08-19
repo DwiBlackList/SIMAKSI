@@ -4,6 +4,7 @@ use App\Http\Controllers\JoinedClassController;
 use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,3 +20,4 @@ Route::resource('/kehadiran' , KehadiranController::class);
 Route::resource('/siswa' , KehadiranController::class);
 Route::resource('/settingkelas' , JoinedClassController::class);
 Route::resource('/nilai' , NilaiController::class);
+Route::resource('/users' , UsersController::class);

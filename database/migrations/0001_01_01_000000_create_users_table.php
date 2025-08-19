@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('kelas')->nullable();
             $table->string('jurusan')->nullable();
-            $table->string('nisn/nip')->nullable();
+            $table->string('nisn_nip')->nullable();
             $table->enum('role' , ['siswa' , 'gurumapel' , 'gurubp/bk' , 'walikelas' , 'admin'])->default('siswa');
             $table->rememberToken();
             $table->timestamps();
