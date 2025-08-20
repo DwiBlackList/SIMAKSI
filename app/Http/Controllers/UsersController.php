@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UsersController extends Controller
 {
@@ -128,5 +129,27 @@ class UsersController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+    function importExcelSiswa(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        Excel::import(new \App\Imports\SiswaImport, $request->file('file'));
+
+        return redirect()->route('users.index')->with('success', 'Siswa imported successfully.');
+    }
+
+    function importExcelGuru(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        Excel::import(new \App\Imports\GuruImport, $request->file('file'));
+
+        return redirect()->route('users.index')->with('success', 'Guru imported successfully.');
     }
 }

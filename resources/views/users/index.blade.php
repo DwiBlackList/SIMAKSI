@@ -27,6 +27,14 @@
                     Tambah Guru
                 </button>
 
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#importExcelSiswa">
+                    Import Excel Siswa
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#importExcelGuru">
+                    Import Excel Guru
+                </button>
+
                 <!-- The Modal Siswa -->
                 <div class="modal fade" id="myModal">
                     <div class="modal-dialog">
@@ -135,6 +143,82 @@
                                         <label for="password" class="form-label">Password</label>
                                         <input type="password" class="form-control" id="password" name="password"
                                             value="{{ old('password') }}" required>
+                                    </div>
+                            </div>
+
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Modal Import Siswa -->
+                <div class="modal fade" id="importExcelSiswa">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Import Excel Siswa</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form action="{{ route('importexcelsiswa') }}" enctype="multipart/form-data" method="POST">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label>Pilih file excel</label>
+                                        <div class="form-group">
+                                            <input type="file" class="form-control" name="file" required="required">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Note : File Excel Harus Berformat / Berisi Sebagai Berikut</label>
+                                        <img src="{{ asset('images/excelsiswa.png') }}" class="img-fluid rounded" alt="" srcset="">
+                                    </div>
+                            </div>
+
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- The Modal Import Guru -->
+                <div class="modal fade" id="importExcelGuru">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Import Excel Guru</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form action="{{ route('importexcelguru') }}" enctype="multipart/form-data" method="POST">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label>Pilih file excel</label>
+                                        <div class="form-group">
+                                            <input type="file" class="form-control" name="file" required="required">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Note : File Excel Harus Berformat / Berisi Sebagai Berikut</label>
+                                        <img src="{{ asset('images/excelguru.png') }}" class="img-fluid rounded" alt="" srcset="">
                                     </div>
                             </div>
 

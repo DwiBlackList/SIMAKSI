@@ -21,3 +21,5 @@ Route::resource('/siswa' , KehadiranController::class);
 Route::resource('/settingkelas' , JoinedClassController::class);
 Route::resource('/nilai' , NilaiController::class);
 Route::resource('/users' , UsersController::class);
+Route::post('/importexcelsiswa' , [UsersController::class , 'importExcelSiswa'])->name('importexcelsiswa');
+Route::post('/importexcelguru' , [UsersController::class , 'importExcelGuru'])->name('importexcelguru');
