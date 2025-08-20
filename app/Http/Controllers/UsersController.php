@@ -50,7 +50,7 @@ class UsersController extends Controller
                 'email' => 'required|string|email|max:255|unique:users',
                 'kelas' => 'required|string',
                 'jurusan' => 'required|string',
-                'nisn/nip' => 'required|string|max:255',
+                'nisn_nip' => 'required|string|max:255',
                 'password' => 'required|string|min:8',
             ]);
         } else {
@@ -58,7 +58,7 @@ class UsersController extends Controller
                 'nama' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'role' => 'required|string|in:guru,walikelas,gurubp/bk',
-                'nisn/nip' => 'required|string|max:255',
+                'nisn_nip' => 'required|string|max:255',
                 'password' => 'required|string|min:8',
             ]);
         }
@@ -97,7 +97,7 @@ class UsersController extends Controller
                 'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'kelas' => 'required|string',
                 'jurusan' => 'required|string',
-                'nisn/nip' => 'required|string|max:255',
+                'nisn_nip' => 'required|string|max:255',
                 'password' => 'nullable|string|min:8',
             ]);
         } else {
@@ -105,7 +105,7 @@ class UsersController extends Controller
                 'nama' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
                 'role' => 'required|string|in:guru,walikelas,gurubp/bk',
-                'nisn/nip' => 'required|string|max:255',
+                'nisn_nip' => 'required|string|max:255',
                 'password' => 'nullable|string|min:8',
             ]);
         }
