@@ -12,12 +12,12 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="nisn/nip" class="col-md-4 col-form-label text-md-end">{{ __('NISN/NIP') }}</label>
+                            <label for="nisn_nip" class="col-md-4 col-form-label text-md-end">{{ __('NISN / NIP') }}</label>
 
                             <div class="col-md-6">
-                                <input id="nisn/nip" type="text" class="form-control @error('nisn/nip') is-invalid @enderror" name="nisn/nip" value="{{ old('nisn/nip') }}" required autocomplete="nisn/nip" autofocus>
+                                <input id="nisn_nip" type="text" class="form-control @error('nisn_nip') is-invalid @enderror" name="nisn_nip" value="{{ old('nisn_nip') }}" required autocomplete="nisn_nip" autofocus>
 
-                                @error('nisn/nip')
+                                @error('nisn_nip')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

@@ -9,7 +9,7 @@ class LoginController extends Controller
 {
     public function username()
     {
-        return 'nisn/nip';
+        return 'nisn_nip';
     }
     /*
     |--------------------------------------------------------------------------
