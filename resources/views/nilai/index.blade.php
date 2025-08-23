@@ -22,161 +22,91 @@
 
                 <hr>
                 @foreach ($mapels as $y)
-                    <div id="accordion">
-                        <div class="card">
-                            <div class="card-header">
-                                <a class="btn" data-bs-toggle="collapse" href="#collapse{{ $y->id }}">
-                                    <h5 class="mb-0">Mapel : {{ $y->nama_mapel }}; Semester : {{ $y->semester }}</h5>
-                                </a>
-                            </div>
-                            <div id="collapse{{ $y->id }}" class="collapse" data-bs-parent="#accordion">
-                                <div class="card-body">
-                                    <table class="table display" id="tabel{{ $y->id }}">
-                                        <thead>
+                    <div class="accordion mb-3" id="accordionMapel{{ $y->id }}">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ $y->id }}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{ $y->id }}" aria-expanded="false"
+                                    aria-controls="collapse{{ $y->id }}">
+                                    <strong>Mapel:</strong> {{ $y->nama_mapel }} &nbsp; | &nbsp;
+                                    <strong>Semester:</strong> {{ $y->semester }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ $y->id }}" class="accordion-collapse collapse"
+                                aria-labelledby="heading{{ $y->id }}"
+                                data-bs-parent="#accordionMapel{{ $y->id }}">
+                                <div class="accordion-body">
+                                    <table class="table table-striped table-bordered" id="tabel{{ $y->id }}">
+                                        <thead class="table-primary">
                                             <tr>
-                                                <th>{{ __('Nama') }}</th>
-                                                <th>{{ __('Role') }}</th>
-                                                <th>{{ __('Nilai') }}</th>
-                                                <th colspan="3">{{ __('Aksi') }}</th>
+                                                <th>Nama</th>
+                                                <th>Role</th>
+                                                <th>Nilai</th>
+                                                <th colspan="3" class="text-center">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($joinedClasses as $joinedClass)
                                                 @if ($joinedClass->mapel_id == $y->id)
+                                                    @php
+                                                        $nilaiUser = $nilais
+                                                            ->where('user_id', $joinedClass->user->id)
+                                                            ->where('mapel_id', $y->id)
+                                                            ->first();
+                                                    @endphp
                                                     <tr>
                                                         <td>{{ $joinedClass->user->nama }}</td>
-                                                        <td>{{ $joinedClass->user->role }}</td>
-                                                        <td>{{ $nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first()->nilai ?? '-' }}</td>
+                                                        <td>{{ ucfirst($joinedClass->user->role) }}</td>
+                                                        <td>{{ $nilaiUser->nilai ?? '-' }}</td>
                                                         <td>
-                                                            @if ($nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first() == null)
-                                                            <button type="button" class="btn btn-primary"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#myModal{{ $joinedClass->id }}">
-                                                                Tambah Nilai
-                                                            </button>
-                                                            <!-- The Modal -->
-                                                            <div class="modal fade" id="myModal{{ $joinedClass->id }}">
-                                                                <div class="modal-dialog">
-                                                                    <div class="modal-content">
-
-                                                                        <!-- Modal Header -->
-                                                                        <div class="modal-header">
-                                                                            <h4 class="modal-title">Form Tambah Nilai :
-                                                                                {{ $joinedClass->user->nama }} -
-                                                                                {{ $y->nama_mapel }}</h4>
-                                                                            <button type="button" class="btn-close"
-                                                                                data-bs-dismiss="modal"></button>
-                                                                        </div>
-
-                                                                        <!-- Modal body -->
-                                                                        <div class="modal-body">
-                                                                            <form action="{{ route('nilai.store') }}"
-                                                                                method="POST">
-                                                                                @csrf
-                                                                                <input type="hidden" name="user_id"
-                                                                                    value="{{ $joinedClass->user->id }}">
-                                                                                <input type="hidden" name="mapel_id"
-                                                                                    value="{{ $y->id }}">
-                                                                                <div class="mb-3">
-                                                                                    <label for="nilai"
-                                                                                        class="form-label">Nilai</label>
-                                                                                    <input type="number"
-                                                                                        class="form-control" id="nilai"
-                                                                                        name="nilai"
-                                                                                        value="{{ old('nilai') }}"
-                                                                                        required>
-                                                                                </div>
-
-                                                                        </div>
-
-
-                                                                        <!-- Modal footer -->
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-danger"
-                                                                                data-bs-dismiss="modal">Close</button>
-                                                                            <button type="submit"
-                                                                                class="btn btn-primary">Simpan</button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            @if (!$nilaiUser)
+                                                                <!-- Tombol Tambah Nilai -->
+                                                                <button type="button" class="btn btn-sm btn-primary"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalTambah{{ $joinedClass->id }}">
+                                                                    Tambah Nilai
+                                                                </button>
+                                                                @include('nilai.modal-nilai-tambah', [
+                                                                    'joinedClass' => $joinedClass,
+                                                                    'mapel' => $y,
+                                                                ])
                                                             @else
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    disabled>Nilai Sudah Ada</button>
+                                                                <button class="btn btn-sm btn-secondary" disabled>Nilai
+                                                                    Ada</button>
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first() == null)
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    disabled>Belum Ada Nilai</button>
+                                                            @if ($nilaiUser)
+                                                                <!-- Tombol Edit -->
+                                                                <button type="button" class="btn btn-sm btn-warning"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalEdit{{ $nilaiUser->id }}">
+                                                                    Edit
+                                                                </button>
+                                                                @include('nilai.modal-nilai-edit', [
+                                                                    'nilai' => $nilaiUser,
+                                                                    'mapel' => $y,
+                                                                    'user' => $joinedClass->user,
+                                                                ])
                                                             @else
-                                                            <button type="button" class="btn btn-warning"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#modalEdit{{ $nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first()->id ?? '-' }}">
-                                                                Edit
-                                                            </button>
-                                                            <div class="modal fade" id="modalEdit{{ $nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first()->id ?? '-' }}">
-                                                                <div class="modal-dialog">
-                                                                    <div class="modal-content">
-
-                                                                        <!-- Modal Header -->
-                                                                        <div class="modal-header">
-                                                                            <h4 class="modal-title">Form Edit Mapel</h4>
-                                                                            <button type="button" class="btn-close"
-                                                                                data-bs-dismiss="modal"></button>
-                                                                        </div>
-
-                                                                        <!-- Modal body -->
-                                                                        <div class="modal-body">
-                                                                            <form
-                                                                                action="{{ route('nilai.update', $nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first()->id ?? '-') }}"
-                                                                                method="POST">
-                                                                                @csrf
-                                                                                @method('PUT')
-                                                                                <input type="hidden" name="user_id"
-                                                                                    value="{{ $joinedClass->user->id }}">
-                                                                                <input type="hidden" name="mapel_id"
-                                                                                    value="{{ $y->id }}">
-                                                                                <div class="mb-3">
-                                                                                    <label for="nilai"
-                                                                                        class="form-label">Nilai</label>
-                                                                                    <input type="number"
-                                                                                        class="form-control" id="nilai"
-                                                                                        name="nilai"
-                                                                                        value="{{ $nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first()->nilai ?? '-' }}"
-                                                                                        required>
-                                                                                </div>
-                                                                        </div>
-
-
-                                                                        <!-- Modal footer -->
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-danger"
-                                                                                data-bs-dismiss="modal">Close</button>
-                                                                            <button type="submit"
-                                                                                class="btn btn-primary">Simpan</button>
-                                                                            </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                <button class="btn btn-sm btn-secondary" disabled>Belum
+                                                                    Ada</button>
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first() == null)
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    disabled>Belum Ada Nilai</button>
+                                                            @if ($nilaiUser)
+                                                                <!-- Tombol Delete -->
+                                                                <form action="{{ route('nilai.destroy', $nilaiUser->id) }}"
+                                                                    method="POST"
+                                                                    onsubmit="return confirm('Yakin hapus nilai ini?');">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-sm btn-danger">Delete</button>
+                                                                </form>
                                                             @else
-                                                            <form
-                                                                action="{{ route('nilai.destroy', $nilais->where('user_id', $joinedClass->user->id)->where('mapel_id', $y->id)->first()->id) }}"
-                                                                method="POST"
-                                                                onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-danger">Delete</button>
-                                                            </form>
+                                                                <button class="btn btn-sm btn-secondary" disabled>Belum
+                                                                    Ada</button>
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -189,6 +119,7 @@
                         </div>
                     </div>
                 @endforeach
+
             </div>
         </div>
     </div>
