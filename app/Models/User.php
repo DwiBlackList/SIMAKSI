@@ -49,8 +49,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
-    public function kehadiran()
+
+    public function kehadirans()
     {
         return $this->hasMany(Kehadiran::class);
     }
@@ -60,8 +60,13 @@ class User extends Authenticatable
         return $this->hasMany(JoinedClass::class);
     }
 
-    public function nilai()
+    public function nilais()
     {
         return $this->hasMany(Nilai::class);
+    }
+
+    public function mapels()
+    {
+        return $this->belongsToMany(Mapel::class, 'joined_classes', 'user_id', 'mapel_id');
     }
 }

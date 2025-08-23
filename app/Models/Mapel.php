@@ -22,4 +22,10 @@ class Mapel extends Model
     {
         return $this->hasMany(Nilai::class);
     }
+
+    public function users()
+{
+    // semua user yang “join” mapel ini via joined_classes
+    return $this->belongsToMany(User::class, 'joined_classes', 'mapel_id', 'user_id');
+}
 }
