@@ -8,7 +8,24 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/palapa.png') }}">
+
+    <title>
+        {{ config('app.name', 'Laravel') }}
+        @guest
+        @else
+            -
+            @if (Auth::user()->role === 'admin')
+                {{ 'Admin' }}
+            @elseif (Auth::user()->role === 'gurubp/bk')
+                {{ 'Guru BP/BK' }}
+            @elseif (Auth::user()->role === 'gurumapel')
+                {{ 'Guru BP/BK' }}
+            @elseif (Auth::user()->role === 'walikelas')
+                {{ 'Wali Kelas' }}
+            @endif
+        @endguest
+    </title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -23,6 +40,35 @@
     {{-- DataTable --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" />
     <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+
+    <style>
+        .marquee-container {
+            width: 100%;
+            overflow-x: hidden;
+            white-space: nowrap;
+            /* Agar teks tidak pecah ke baris baru */
+        }
+
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            /* kasih jarak biar mulai dari pojok kanan */
+            animation: scroll-text 20s linear infinite;
+        }
+
+
+        @keyframes scroll-text {
+            from {
+                transform: translateX(100%);
+                /* mulai jauh di kanan */
+            }
+
+            to {
+                transform: translateX(-100%);
+                /* geser keluar kiri */
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -30,6 +76,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
+                    <img src="{{ asset('images/palapa.png') }}" alt="Logo" style="width:40px;" class="">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -62,13 +109,15 @@
                         @else
                             @if (Auth::user()->role === 'admin')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('users.index') }}">{{ __('Data Siswa & Guru') }}</a>
+                                    <a class="nav-link"
+                                        href="{{ route('users.index') }}">{{ __('Data Siswa & Guru') }}</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('mapel.index') }}">{{ __('Mapel') }}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('settingkelas.index') }}">{{ __('Setting Kelas') }}</a>
+                                    <a class="nav-link"
+                                        href="{{ route('settingkelas.index') }}">{{ __('Setting Kelas') }}</a>
                                 </li>
                             @endif
                             @if (Auth::user()->role === 'admin' || Auth::user()->role === 'gurumapel')
@@ -108,6 +157,17 @@
         <main class="py-4">
             @yield('content')
         </main>
+
+        <footer class="fixed-bottom bg-light text-center text-lg-start">
+            <div class="marquee-container">
+                <div class="marquee-content">
+                    Teks ini akan bergulir menggunakan animasi CSS.
+                </div>
+            </div>
+            <div class="text-center p-3">
+                © 2023 SMK Palapa Semarang
+            </div>
+        </footer>
     </div>
 </body>
 
